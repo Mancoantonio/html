@@ -2,6 +2,6 @@ html {
     background-color: darkblue;
 }
 
-p, h1 {
+p, h1, h2, h4 {
     color: yellow;
 }
