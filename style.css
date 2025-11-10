@@ -13,6 +13,9 @@ h1, h2, h3, h4 {
 form, label, input, table, ol, li {
     color: white;
 }
+form input {
+    color: black;
+}
 aside {
     color: white;
 }
