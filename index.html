@@ -8,6 +8,148 @@
    </head>
    <body>
       <header>
+      <h2>Programa de Antropometría</h2>
+
+<div id="antropometria">
+    <label>Nombre:</label>
+    <input id="nombre">
+
+    <label>Peso (kg):</label>
+    <input id="peso" type="number" step="0.1">
+
+    <label>Altura (m):</label>
+    <input id="altura" type="number" step="0.01">
+
+    <label>Sexo (m/f):</label>
+    <input id="sexo">
+
+    <label>Cadera (cm):</label>
+    <input id="cadera" type="number">
+
+    <label>Cintura (cm):</label>
+    <input id="cintura" type="number">
+
+    <label>Edad:</label>
+    <input id="edad" type="number">
+
+    <button onclick="calcular()">Calcular</button>
+</div>
+
+<div id="salida" class="section output"></div>
+
+<script>
+function calcularIMC(peso, altura) {
+    return peso / (altura ** 2);
+}
+
+function calcularCunBae(cintura_m, sexo, sexo_num, edad, imc) {
+    return -44.988
+        + (0.503 * edad)
+        + (10.689 * sexo_num)
+        + (3.172 * imc)
+        - (0.026 * imc ** 2)
+        + (0.181 * imc * sexo_num)
+        - (0.02 * imc * edad)
+        - (0.005 * imc ** 2 * sexo_num)
+        + (0.00021 * imc ** 2 * edad);
+}
+
+function clasificacionOMS(imc) {
+    if (imc < 18.5) return "Bajo Peso";
+    if (imc < 25) return "Normal";
+    if (imc < 30) return "Sobrepeso";
+    if (imc < 35) return "Obesidad grado I (RIESGO CARDIOVASCULAR LIGERO)";
+    if (imc < 40) return "Obesidad grado II (RIESGO CARDIOVASCULAR MODERADO)";
+    return "Obesidad grado III (mórbida) (RIESGOS CARDIOVASCULARES SEVEROS)";
+}
+
+function clasificacionRCC(rcc, sexo) {
+    if (sexo === "m") {
+        if (rcc < 0.90) return "RCC saludable para hombres";
+        return "RCC elevada para hombres, riesgos de salud asociados";
+    }
+    if (sexo === "f") {
+        if (rcc < 0.85) return "RCC saludable para mujeres";
+        return "RCC elevada para mujeres, riesgos de salud asociados";
+    }
+    return "Sexo no válido";
+}
+
+function clasificacionRCA(rca) {
+    if (rca < 0.40) return "RCA muy bajo, posible desnutrición o bajo peso extremo";
+    if (rca < 0.50) return "RCA Saludable";
+    if (rca <= 0.60) return "RCA riesgo moderado de sobrepeso";
+    return "RCA de ALTO RIESGO, posible obesidad abdominal";
+}
+
+function clasificacionConicidad(ind_con) {
+    if (ind_con < 1) return "Delgado o saludable según índice de conicidad";
+    if (ind_con < 1.26) return "Riesgo de sobrepeso según índice de conicidad";
+    return "Riesgo de obesidad según índice de conicidad";
+}
+
+function classGrasa(sexo, cun) {
+    if (sexo === "m") {
+        if (cun < 6) return "Grasa Esencial";
+        if (cun < 14) return "Atleta";
+        if (cun < 18) return "Fitness";
+        if (cun < 25) return "Promedio Saludable";
+        if (cun < 30) return "Obesidad grado 1";
+        if (cun < 35) return "Obesidad grado 2";
+        return "OMGbesidad GRADO 3!!";
+    }
+    if (sexo === "f") {
+        if (cun < 14) return "Grasa Esencial";
+        if (cun < 21) return "Atleta";
+        if (cun < 25) return "Fitness";
+        if (cun < 32) return "Promedio Saludable";
+        if (cun < 38) return "Obesidad grado 1";
+        if (cun < 43) return "Obesidad grado 2";
+        return "OMGbesidad GRADO 3!!";
+    }
+}
+
+function calcular() {
+    const nombre = document.getElementById("nombre").value;
+    const peso = parseFloat(document.getElementById("peso").value);
+    const altura = parseFloat(document.getElementById("altura").value);
+    const sexo = document.getElementById("sexo").value.toLowerCase();
+    const cadera = parseFloat(document.getElementById("cadera").value);
+    const cintura = parseFloat(document.getElementById("cintura").value);
+    const edad = parseInt(document.getElementById("edad").value);
+
+    const altura_cm = altura * 100;
+    const cintura_m = cintura / 100;
+    const rcc = cintura / cadera;
+    const rca = cintura / altura_cm;
+    const ind_con = cintura_m / (0.109 * Math.sqrt(peso / altura));
+    const sexo_num = sexo === "m" ? 1 : 0;
+
+    const imc = calcularIMC(peso, altura);
+    const cun = calcularCunBae(cintura_m, sexo, sexo_num, edad, imc);
+
+    const salida = `
+Nombre: ${nombre}
+
+IMC: ${imc.toFixed(2)}
+Clasificación OMS: ${clasificacionOMS(imc)}
+
+RCC: ${rcc.toFixed(2)}
+Clasificación RCC: ${clasificacionRCC(rcc, sexo)}
+
+RCA: ${rca.toFixed(2)}
+Clasificación RCA: ${clasificacionRCA(rca)}
+
+Índice de Conicidad: ${ind_con.toFixed(2)}
+Clasificación Conicidad: ${clasificacionConicidad(ind_con)}
+
+Porcentaje de Grasa: ${cun.toFixed(2)}%
+Clasificación de Grasa: ${classGrasa(sexo, cun)}
+`;
+
+    document.getElementById("salida").textContent = salida;
+}
+</script>
         <h1 style=text-align:center>¡Holi, Mundo!</h1>
         <p style=text-align:center>Bienvenido a mi página web creada por el puro gusto de aprender y mejorar.<br>
            </p><br>
