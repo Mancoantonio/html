@@ -1,341 +1,65 @@
 <!DOCTYPE html>
 <html lang="es">
-   <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Mi Página Web(E.O.)</title>
-        <link rel="stylesheet" href="./style.css" />
-   </head>
-   <body>
-      <header>
-      <h2>Programa de Antropometría</h2>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Penalty Typing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="fxCanvas"></canvas>
 
-<div id="antropometria">
-    <label>Nombre:</label>
-    <input id="nombre">
+  <div id="game">
+    <h1>⚽ PENALTY TYPING ⚽</h1>
 
-    <label>Peso (kg):</label>
-    <input id="peso" type="number" step="0.1">
+    <!-- Marcador: nivel / puntos / intentos / tarjetas -->
+    <div id="scoreboard">
+      <div class="sb-item">PUNTOS<span id="score">0</span></div>
+      <div class="sb-item">NIVEL<span id="level">1</span></div>
+      <div class="sb-item">INTENTOS<span id="lives">3</span></div>
+      <div class="sb-item">RACHA<span id="streak">0</span></div>
+      <div class="sb-item cards">
+        <span id="yellowCard" class="card yellow hidden">🟨</span>
+        <span id="redCard" class="card red hidden">🟥</span>
+      </div>
+    </div>
 
-    <label>Altura (m):</label>
-    <input id="altura" type="number" step="0.01">
+    <!-- Barra de tiempo tipo mecha -->
+    <div id="timer-container">
+      <div id="timer"></div>
+      <div id="spark">🔥</div>
+    </div>
 
-    <label>Sexo (m/f):</label>
-    <input id="sexo">
+    <!-- Cancha + sprite del jugador/pelota -->
+    <div id="pitch">
+      <div id="goal"></div>
+      <div id="sprite">
+        <img id="playerSprite" src="sprites/penal_idle.svg" alt="Jugador">
+      </div>
+      <div id="ball">⚽</div>
+    </div>
 
-    <label>Cadera (cm):</label>
-    <input id="cadera" type="number">
+    <!-- Desafío -->
+    <h2>ESCRIBE:</h2>
+    <div id="word"></div>
 
-    <label>Cintura (cm):</label>
-    <input id="cintura" type="number">
+    <input
+      type="text"
+      id="inputWord"
+      autocomplete="off"
+      autocapitalize="off"
+      autocorrect="off"
+      spellcheck="false"
+      placeholder="Escribe aquí">
 
-    <label>Edad:</label>
-    <input id="edad" type="number">
+    <!-- Mensajes (GOOOL / Fallaste / Tarjeta) -->
+    <div id="message">&nbsp;</div>
 
-    <button onclick="calcular()">Calcular</button>
-</div>
+    <button id="startButton">Comenzar Partido</button>
+  </div>
 
-<div id="salida" class="section output"></div>
-
-<script>
-function calcularIMC(peso, altura) {
-    return peso / (altura ** 2);
-}
-
-function calcularCunBae(cintura_m, sexo, sexo_num, edad, imc) {
-    return -44.988
-        + (0.503 * edad)
-        + (10.689 * sexo_num)
-        + (3.172 * imc)
-        - (0.026 * imc ** 2)
-        + (0.181 * imc * sexo_num)
-        - (0.02 * imc * edad)
-        - (0.005 * imc ** 2 * sexo_num)
-        + (0.00021 * imc ** 2 * edad);
-}
-
-function clasificacionOMS(imc) {
-    if (imc < 18.5) return "Bajo Peso";
-    if (imc < 25) return "Normal";
-    if (imc < 30) return "Sobrepeso";
-    if (imc < 35) return "Obesidad grado I (RIESGO CARDIOVASCULAR LIGERO)";
-    if (imc < 40) return "Obesidad grado II (RIESGO CARDIOVASCULAR MODERADO)";
-    return "Obesidad grado III (mórbida) (RIESGOS CARDIOVASCULARES SEVEROS)";
-}
-
-function clasificacionRCC(rcc, sexo) {
-    if (sexo === "m") {
-        if (rcc < 0.90) return "RCC saludable para hombres";
-        return "RCC elevada para hombres, riesgos de salud asociados";
-    }
-    if (sexo === "f") {
-        if (rcc < 0.85) return "RCC saludable para mujeres";
-        return "RCC elevada para mujeres, riesgos de salud asociados";
-    }
-    return "Sexo no válido";
-}
-
-function clasificacionRCA(rca) {
-    if (rca < 0.40) return "RCA muy bajo, posible desnutrición o bajo peso extremo";
-    if (rca < 0.50) return "RCA Saludable";
-    if (rca <= 0.60) return "RCA riesgo moderado de sobrepeso";
-    return "RCA de ALTO RIESGO, posible obesidad abdominal";
-}
-
-function clasificacionConicidad(ind_con) {
-    if (ind_con < 1) return "Delgado o saludable según índice de conicidad";
-    if (ind_con < 1.26) return "Riesgo de sobrepeso según índice de conicidad";
-    return "Riesgo de obesidad según índice de conicidad";
-}
-
-function classGrasa(sexo, cun) {
-    if (sexo === "m") {
-        if (cun < 6) return "Grasa Esencial";
-        if (cun < 14) return "Atleta";
-        if (cun < 18) return "Fitness";
-        if (cun < 25) return "Promedio Saludable";
-        if (cun < 30) return "Obesidad grado 1";
-        if (cun < 35) return "Obesidad grado 2";
-        return "OMGbesidad GRADO 3!!";
-    }
-    if (sexo === "f") {
-        if (cun < 14) return "Grasa Esencial";
-        if (cun < 21) return "Atleta";
-        if (cun < 25) return "Fitness";
-        if (cun < 32) return "Promedio Saludable";
-        if (cun < 38) return "Obesidad grado 1";
-        if (cun < 43) return "Obesidad grado 2";
-        return "OMGbesidad GRADO 3!!";
-    }
-}
-
-function calcular() {
-    const nombre = document.getElementById("nombre").value;
-    const peso = parseFloat(document.getElementById("peso").value);
-    const altura = parseFloat(document.getElementById("altura").value);
-    const sexo = document.getElementById("sexo").value.toLowerCase();
-    const cadera = parseFloat(document.getElementById("cadera").value);
-    const cintura = parseFloat(document.getElementById("cintura").value);
-    const edad = parseInt(document.getElementById("edad").value);
-
-    const altura_cm = altura * 100;
-    const cintura_m = cintura / 100;
-    const rcc = cintura / cadera;
-    const rca = cintura / altura_cm;
-    const ind_con = cintura_m / (0.109 * Math.sqrt(peso / altura));
-    const sexo_num = sexo === "m" ? 1 : 0;
-
-    const imc = calcularIMC(peso, altura);
-    const cun = calcularCunBae(cintura_m, sexo, sexo_num, edad, imc);
-
-    const salida = `
-Nombre: ${nombre}
-
-IMC: ${imc.toFixed(2)}
-Clasificación OMS: ${clasificacionOMS(imc)}
-
-RCC: ${rcc.toFixed(2)}
-Clasificación RCC: ${clasificacionRCC(rcc, sexo)}
-
-RCA: ${rca.toFixed(2)}
-Clasificación RCA: ${clasificacionRCA(rca)}
-
-Índice de Conicidad: ${ind_con.toFixed(2)}
-Clasificación Conicidad: ${clasificacionConicidad(ind_con)}
-
-Porcentaje de Grasa: ${cun.toFixed(2)}%
-Clasificación de Grasa: ${classGrasa(sexo, cun)}
-`;
-
-    document.getElementById("salida").textContent = salida;
-}
-</script>
-        <h1 style=text-align:center>¡Holi, Mundo!</h1>
-        <p style=text-align:center>Bienvenido a mi página web creada por el puro gusto de aprender y mejorar.<br>
-           </p><br>
-         <h2>¿¿De qué país nos visitas??</h2>
-      <select>
-         <option value="Argentina">Argentina</option>
-         <option value="Bolivia">Bolivia</option>
-         <option value="Brazil">Brazil</option>
-         <option value="Chile">Chile</option>
-         <option value="Colombia">Colombia</option>
-         <option value="Costa Rica">Costa Rica</option>
-         <option value="Cuba">Cuba</option>
-         <option value="Dominican Republic">Dominican Republic</option>
-         <option value="Ecuador">Ecuador</option>
-         <option value="El Salvador">El Salvador</option>
-         <option value="Guatemala">Guatemala</option>
-         <option value="Honduras">Honduras</option>
-         <option value="Mexico">Mexico</option>
-         <option value="Nicaragua">Nicaragua</option>
-         <option value="Panama">Panama</option>
-         <option value="Paraguay">Paraguay</option>
-         <option value="Peru">Peru</option>
-         <option value="Uruguay">Uruguay</option>
-         <option value="Venezuela">Venezuela</option>
-         <option value="Otro">Un país desarrollado</option>
-      </select><br><br>
-      <article>
-      <h2>ELIGE TUS PRONOMBRES! :) </h2>
-      <select>
-         <option>Él/Him</option>
-         <option>Ella/Her</option> 
-      </select>
-      </article>
-<br><br><br>
-         
-        <form>
-        <label for="nombre" >Nombre:</label>
-        <input id="nombre" placeholder="Obviamente acá se escribe">
-        <br><br>
-        <label for="corero" >Correo electrónico:</label>
-        <input id="corero" type="email" placeholder="escribe.aca@tucorreo.po">
-        
-        <br><br>
-        <label for="nombre" >Fecha de visita de la página:<br></label>
-        <input type="datetime-local" placeholder="Escribe aca po ahueonao">
-        <br><br>
-        <p>Escoja por favor su SEXO:
-        <label for="nombre" >Hombre:
-        <input type="radio" name="sexo" value="hombre"></label>
-        <label for="nombre" >Mujer:
-        <input type="radio" name="sexo" value="mujer" ></p></label>
-        <br><br>
-        Acá puedes escribir algún comentario, sugerencia o reclamo<br>
-        <textarea id="comment" rows="20" cols="70" placeholder="Escribe bonito las palabras crean realidades" ></textarea>
-        <br><br>
-        <label for="boton" >Aprieta acá a ver para enviar la información:</label>
-        <input type="Submit" id="boton">
-    </form>
-              <nav>
-        <ul>
-          <li><a href="#about">Sobre mí</a></li>
-          <li><a href="#projects">Proyectos</a></li>
-        </ul>
-      </nav>
-        <img src="img/manco_gibli.png" height="400" alt="Foto de Perfil" />
-           
-        
-        
-   </header>
-   <main>
-      <section id="about" style=text-align:center>
-        <h2>Sobre mí</h2>
-        <p>Soy un entusiasta de la programación, la ciencia de datos y la vida activa.<br>
-        Cinturón negro de BJJ y Profesor de Educación Física de la P.U.C.V.<br>
-        Aficionado a los First Person Shooters, especialmente boomer shooters.<br>
-        </p>
-        <h4>Modder neófito de GZDOOM.</h4>
-
-         <a target="_blank" href="https://www.moddb.com/games/doom-ii/downloads/pokemon-ice#downloadsform"> <span style="color:aqua"> Descargar Doom Mod Pokemon Ice & Crack </span></a><br>
-
-        <img src="img/DOOM MOD.png" height="500" alt="Mod de Doom" />
-
-        <h4>Boxeador Amateur.</h4>
-
-        <img src="img/debut_box.jpg" height="600" alt="Debut de Boxeo" />
-        
-       <h4> Papá mono de Blanquita </h4>
-        <img src="img/Blanquita.jpg" height="400" alt="Blanquita" />
-
-      </section>
-      <section id="projects" style=text-align:center>
-         <h2>Proyectos</h2>
-
-         <article>
-            <h3>Programa de Antropometría</h3>
-            <p style=text-align:justify>Usando el Índice de Masa Corporal y el Índice de Cun Bae, este programa estima el porcentaje de grasa del usuario usando los datos de:
-            Peso(kg), Altura (m), Perímetro de cintura (cm), perímetro de cadera (cm) Sexo (M/F) <br>
-            Materiales necesarios: Cinta métrica y balanza.<br>
-            El programa usa TIMESTAMP para generar la fecha de la consulta (dd.mm.aaa.) y guardar los datos en un archivo .csv<br>
-            ¿Por qué el IMC no es suficiente? 
-            Aunque el IMC es ampliamente utilizado, tiene una gran limitación: No distingue entre masa muscular y masa grasa.
-            Una persona muy musculosa puede ser clasificada como “obesa” según el IMC, a pesar de tener poca grasa corporal.</p>
-
-            <a target="_blank" href="https://github.com/Mancoantonio/ANTROPOMETRICS"> <span style="color:aqua"> Ver programa de Antropometría en Github </span></a><br>
-
-         <img src="img/imc1.png" height="300" alt="imc1" />
-         <img src="img/imc2.png" height="300" alt="imc2" />
-            
-         </article>
-
-         <article>
-            <h3 style= text-align:center>TrenTren y CaiCai: Guardianes del Archipiélago</h3>
-            <p  style= text-align:justify>TrenTren y Caicai: Guardianes del Archipiélago es un videojuego chileno en desarrollo, programado en GODOT,  
-                inspirado en la rica mitología del territorio de Chile y ambientado en un mundo pixelado de estética retro, evocando la energía y el estilo visual de los videojuegos clásicos de los años 90.
-            TrenTren y CaiCai son dos personajes icónicos de la cultura popular que representan la conexión entre la naturaleza y la tecnología. <br>
-            TrenTren, un tren de alta velocidad, simboliza el avance tecnológico, mientras que CaiCai, un ave nativa, representa la belleza y fragilidad del ecosistema.<br>
-            Juntos, abogan por un equilibrio entre el progreso y la conservación ambiental.
-            El proyecto busca rescatar elementos del imaginario cultural nacional a través del lenguaje contemporáneo del videojuego, 
-            conectando tradición y modernidad en una experiencia interactiva educativa y entretenida.<br></p>
-
-            <img src="img/portada.png" height="700" alt="CaiCai y TrenTren" /><br>
-            <img src="img/MUNDOTRAUCO.png" height="300" alt="Trauco" /><br>
-            <img src="img/MUNDOTUETUE.png" height="300" alt="TueTue" /><br>
-         </article>
-         <br><br>
-         <p> Etapa actual:
-El proyecto se encuentra en fase de desarrollo conceptual y prototipado.<br>Ya se cuenta con la documentación base, referencias visuales, estructura de niveles y planteamiento de mecánicas principales.
- </p>
- <br>
-
-         <h1 style=text-align:center>Descripción de las Etapas del Proyecto</h1>
-                <p style=text-align:left>Constará de:
-        <ol style=text-align:left>
-            <li>Conceptualización
-            <li>Prototipo Jugable
-            <li>Producción Artística
-            <li>Pruebas y Ajuste
-</p>
-            </li>
-
-        </ol>
-        <br>
-        </article>
-        <table style="margin: 0 auto;">
-            <thead>
-                <th>Etapa</th>
-                <th>Descripción</th>
-                <th>Duración</th>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Conceptualización</td>
-                    <td>Guion, diseño de personajes y enemigos, referencias visuales.</td>
-                    <td>1 mes</td>
-                </tr><tr>
-                    <td>Prototipo Jugable</td>
-                    <td>Programación base en Godot, animaciones iniciales, 1 escenario funcional.</td>
-                    <td>4 meses</td>
-                </tr><tr>
-                    <td>Producción Artística</td>
-                    <td>Creación de sprites, fondos, música y efectos sonoros.</td>
-                    <td>3 meses</td>
-                </tr><tr>
-                    <td>Pruebas y Ajustes</td>
-                    <td>Balance, testeo, corrección de errores y optimización.</td>
-                    <td>2 meses</td>
-                </tr>
-            </tbody>
-        </table>
-        </article>
-<br><br>
-      </section>
-      
-      <aside>
-        <h2>Datos curiosos</h2>
-        <ul>
-          <li>Entrenador y practicante de artes marciales.</li>
-          <li>Estudiante de Ciencia de Datos.</li>
-          <li>Programador en desarrollo</li>
-        </ul>
-      </aside>
-      
-   </main>
-      
-      <footer>
-         <img src="img/faixapreta.jpg" height="200" alt="Preta" />
-      <p>© 2025 Mancoantonio/Prof Toosie. Todos los derechos reservados.</p>
-   </body>
+  <script src="script.js"></script>
+</body>
 </html>
