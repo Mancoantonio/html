@@ -3,63 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Penalty Typing</title>
+<title>Penalty — Suite de Juegos Educativos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <canvas id="fxCanvas"></canvas>
 
-  <div id="game">
-    <h1>⚽ PENALTY TYPING ⚽</h1>
+  <!-- ---------- PANTALLA DE MENÚ ---------- -->
+  <div id="menuScreen">
+    <h1>⚽ PENALTY <span>Suite</span></h1>
+    <p class="subtitle">Elige tu partido de entrenamiento</p>
 
-    <!-- Marcador: nivel / puntos / intentos / tarjetas -->
-    <div id="scoreboard">
-      <div class="sb-item">PUNTOS<span id="score">0</span></div>
-      <div class="sb-item">NIVEL<span id="level">1</span></div>
-      <div class="sb-item">INTENTOS<span id="lives">3</span></div>
-      <div class="sb-item">RACHA<span id="streak">0</span></div>
-      <div class="sb-item cards">
-        <span id="yellowCard" class="card yellow hidden">🟨</span>
-        <span id="redCard" class="card red hidden">🟥</span>
-      </div>
+    <div class="game-grid">
+      <button class="game-card" data-game="word-game">
+        <span class="card-emoji">🔤</span>
+        <span class="card-title">Penalty Typing</span>
+        <span class="card-desc">Entrena mecanografía pateando penales</span>
+      </button>
+
+      <button class="game-card" data-game="math-game">
+        <span class="card-emoji">🧮</span>
+        <span class="card-title">Penalty Math</span>
+        <span class="card-desc">Suma, resta, multiplica y divide para anotar</span>
+      </button>
     </div>
-
-    <!-- Barra de tiempo tipo mecha -->
-    <div id="timer-container">
-      <div id="timer"></div>
-      <div id="spark">🔥</div>
-    </div>
-
-    <!-- Cancha + sprite del jugador/pelota -->
-    <div id="pitch">
-      <div id="goal"></div>
-      <div id="sprite">
-        <img id="playerSprite" src="sprites/penal_idle.svg" alt="Jugador">
-      </div>
-      <div id="ball">⚽</div>
-    </div>
-
-    <!-- Desafío -->
-    <h2>ESCRIBE:</h2>
-    <div id="word"></div>
-
-    <input
-      type="text"
-      id="inputWord"
-      autocomplete="off"
-      autocapitalize="off"
-      autocorrect="off"
-      spellcheck="false"
-      placeholder="Escribe aquí">
-
-    <!-- Mensajes (GOOOL / Fallaste / Tarjeta) -->
-    <div id="message">&nbsp;</div>
-
-    <button id="startButton">Comenzar Partido</button>
   </div>
 
-  <script src="script.js"></script>
+  <!-- ---------- PANTALLA DE JUEGO (iframe aislado) ---------- -->
+  <div id="gameScreen" class="hidden">
+    <button id="backButton">← Volver al menú</button>
+    <iframe id="gameFrame" title="Juego"></iframe>
+  </div>
+
+  <script src="main.js"></script>
 </body>
 </html>
