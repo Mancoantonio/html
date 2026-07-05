@@ -9,254 +9,116 @@
 }
 
 *{box-sizing:border-box;}
-html,body{margin:0;padding:0;}
+html,body{margin:0;padding:0;height:100%;}
 
 body{
   font-family:'Nunito',sans-serif;
   min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  color:var(--line);
   background:
     radial-gradient(ellipse at 50% 0%, rgba(232,184,75,0.10), transparent 55%),
     repeating-linear-gradient(0deg, var(--grass-dark) 0 38px, var(--grass-mid) 38px 76px);
-  color:var(--line);
-  padding:20px 12px;
-  overflow-x:hidden;
 }
 
-#fxCanvas{
-  position:fixed;
-  top:0;left:0;
-  width:100%;height:100%;
-  pointer-events:none;
-  z-index:50;
-}
-
-#game{
-  width:100%;
-  max-width:480px;
-  background:rgba(8,19,12,0.55);
-  border:2px solid rgba(244,244,237,0.18);
-  border-radius:20px;
-  padding:22px 20px 26px;
-  text-align:center;
-  box-shadow:0 20px 50px rgba(0,0,0,0.45), inset 0 0 60px rgba(0,0,0,0.25);
-  position:relative;
-}
-
-h1{
-  font-family:'Oswald',sans-serif;
-  font-weight:700;
-  letter-spacing:1px;
-  font-size:clamp(22px,5vw,30px);
-  margin:0 0 16px;
-  color:var(--gold);
-  text-shadow:0 2px 0 rgba(0,0,0,0.4);
-}
-
-h2{
-  font-family:'Oswald',sans-serif;
-  font-size:14px;
-  letter-spacing:2px;
-  margin:14px 0 6px;
-  color:rgba(244,244,237,0.6);
-}
-
-/* ---------- MARCADOR ---------- */
-#scoreboard{
-  display:flex;
-  justify-content:space-between;
-  gap:6px;
-  background:rgba(0,0,0,0.35);
-  border-radius:12px;
-  padding:8px 6px;
-  margin-bottom:14px;
-  flex-wrap:wrap;
-}
-.sb-item{
-  font-family:'Oswald',sans-serif;
-  font-size:10px;
-  letter-spacing:1px;
-  color:rgba(244,244,237,0.55);
+/* ---------- MENÚ ---------- */
+#menuScreen{
+  min-height:100vh;
   display:flex;
   flex-direction:column;
   align-items:center;
-  min-width:46px;
-}
-.sb-item span{
-  font-size:18px;
-  color:var(--gold);
-  font-weight:700;
-  margin-top:2px;
-}
-.sb-item.cards{ flex-direction:row; gap:4px; align-items:center; justify-content:center; }
-.card{ font-size:20px; transition:opacity .2s, transform .2s; }
-.card.hidden{ opacity:0.15; transform:scale(0.8); }
-
-/* ---------- MECHA / TIMER ---------- */
-#timer-container{
-  position:relative;
-  width:100%;
-  height:18px;
-  background:#1a1a1a;
-  border-radius:10px;
-  overflow:hidden;
-  margin-bottom:18px;
-  border:1px solid rgba(244,244,237,0.15);
-}
-#timer{
-  height:100%;
-  width:100%;
-  background:linear-gradient(90deg, var(--red), var(--yellow));
-  transition:width 0.12s linear;
-  border-radius:10px 0 0 10px;
-}
-#spark{
-  position:absolute;
-  top:50%;
-  right:0;
-  transform:translate(50%,-50%);
-  font-size:16px;
-  filter:drop-shadow(0 0 6px rgba(242,194,48,0.8));
-}
-
-/* ---------- CANCHA ---------- */
-#pitch{
-  position:relative;
-  height:130px;
-  margin-bottom:10px;
-  display:flex;
-  align-items:flex-end;
   justify-content:center;
-}
-#goal{
-  position:absolute;
-  top:0; left:50%;
-  transform:translateX(-50%);
-  width:200px; height:90px;
-  border:6px solid var(--line);
-  border-bottom:none;
-  background:
-    repeating-linear-gradient(90deg, transparent 0 18px, rgba(244,244,237,0.18) 18px 19px),
-    repeating-linear-gradient(0deg, transparent 0 18px, rgba(244,244,237,0.18) 18px 19px);
-  border-radius:4px 4px 0 0;
-}
-#sprite{
-  position:relative;
-  z-index:2;
-  width:64px;
-  height:80px;
-}
-#sprite img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  filter:drop-shadow(0 6px 8px rgba(0,0,0,0.5));
-}
-#ball{
-  position:absolute;
-  bottom:6px;
-  left:50%;
-  font-size:26px;
-  transform:translateX(-50%);
-  transition: left 0.5s ease, bottom 0.5s ease, transform 0.5s ease;
-}
-#ball.flying{
-  bottom:60px;
-}
-#ball.goal-left{ left:30%; bottom:55px; }
-#ball.goal-right{ left:70%; bottom:55px; }
-#ball.wide-left{ left:-10%; bottom:70px; transform:translateX(-50%) rotate(-30deg); }
-#ball.wide-right{ left:110%; bottom:70px; transform:translateX(-50%) rotate(30deg); }
-#ball.hit-post{ left:38%; bottom:90px; }
-
-/* ---------- PALABRA / INPUT ---------- */
-#word{
-  font-family:'Oswald',sans-serif;
-  font-size:clamp(28px,7vw,38px);
-  letter-spacing:4px;
-  font-weight:600;
-  color:var(--line);
-  margin-bottom:14px;
-  min-height:46px;
-  text-shadow:0 2px 10px rgba(0,0,0,0.4);
-}
-#word .typed{ color:var(--gold); }
-#word .pending{ color:rgba(244,244,237,0.35); }
-
-#inputWord{
-  width:100%;
-  font-family:'Nunito',sans-serif;
-  font-size:18px;
-  font-weight:700;
+  padding:24px 16px;
   text-align:center;
-  padding:12px 14px;
-  border-radius:12px;
-  border:2px solid rgba(244,244,237,0.25);
-  background:rgba(244,244,237,0.06);
-  color:var(--line);
-  margin-bottom:10px;
-  outline:none;
-}
-#inputWord:focus{
-  border-color:var(--gold);
-  box-shadow:0 0 0 3px rgba(232,184,75,0.25);
 }
 
-/* ---------- MENSAJES ---------- */
-#message{
-  font-family:'Oswald',sans-serif;
-  font-size:20px;
-  font-weight:700;
-  min-height:30px;
-  color:var(--gold);
-  margin-bottom:10px;
-  transition:color .2s;
-}
-#message.bad{ color:var(--red); }
-#message.warn{ color:var(--yellow); }
-
-#startButton{
+#menuScreen h1{
   font-family:'Oswald',sans-serif;
   font-weight:700;
   letter-spacing:1px;
-  background:var(--gold);
-  color:var(--ink);
-  border:none;
-  padding:12px 24px;
-  border-radius:12px;
+  font-size:clamp(28px,6vw,42px);
+  margin:0 0 6px;
+  color:var(--gold);
+  text-shadow:0 2px 0 rgba(0,0,0,0.4);
+}
+#menuScreen h1 span{ color:var(--line); }
+
+.subtitle{
+  font-weight:700;
+  color:rgba(244,244,237,0.6);
+  margin:0 0 34px;
   font-size:15px;
+  letter-spacing:0.5px;
+}
+
+.game-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  width:100%;
+  max-width:560px;
+}
+@media (max-width:520px){
+  .game-grid{ grid-template-columns:1fr; }
+}
+
+.game-card{
+  font-family:'Nunito',sans-serif;
+  background:rgba(244,244,237,0.06);
+  border:2px solid rgba(244,244,237,0.18);
+  border-radius:20px;
+  padding:28px 18px;
   cursor:pointer;
-  box-shadow:0 6px 0 #a87f23;
-  transition:transform .08s;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  transition:all .18s ease;
+  color:var(--line);
 }
-#startButton:active{ transform:translateY(4px); box-shadow:0 2px 0 #a87f23; }
-#startButton.hidden{ display:none; }
-
-/* ---------- EFECTOS: SHAKE / FLASH ---------- */
-.shake{ animation:pitchShake 0.35s ease; }
-@keyframes pitchShake{
-  0%{transform:translate(0,0) rotate(0);}
-  20%{transform:translate(-6px,2px) rotate(-0.6deg);}
-  40%{transform:translate(5px,-2px) rotate(0.5deg);}
-  60%{transform:translate(-4px,1px) rotate(-0.4deg);}
-  80%{transform:translate(3px,-1px) rotate(0.3deg);}
-  100%{transform:translate(0,0) rotate(0);}
+.game-card:hover{
+  border-color:var(--gold);
+  background:rgba(232,184,75,0.10);
+  transform:translateY(-4px);
+  box-shadow:0 14px 30px rgba(0,0,0,0.35);
 }
-.dim-flash{ animation:dimFlash 0.4s ease; }
-@keyframes dimFlash{
-  0%{filter:brightness(1);}
-  30%{filter:brightness(0.55) saturate(0.6);}
-  100%{filter:brightness(1);}
+.card-emoji{ font-size:44px; }
+.card-title{
+  font-family:'Oswald',sans-serif;
+  font-weight:700;
+  font-size:19px;
+  color:var(--gold);
 }
-.goal-flash{ animation:goalFlash 0.5s ease; }
-@keyframes goalFlash{
-  0%{filter:brightness(1);}
-  30%{filter:brightness(1.4) saturate(1.3);}
-  100%{filter:brightness(1);}
+.card-desc{
+  font-size:13px;
+  color:rgba(244,244,237,0.65);
+  line-height:1.4;
 }
 
-@media (prefers-reduced-motion: reduce){
-  .shake, .dim-flash, .goal-flash, #ball{ animation:none !important; transition:none !important; }
+/* ---------- PANTALLA DE JUEGO ---------- */
+#gameScreen{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+#gameScreen.hidden{ display:none; }
+#menuScreen.hidden{ display:none; }
+
+#backButton{
+  font-family:'Oswald',sans-serif;
+  font-weight:600;
+  background:rgba(8,19,12,0.75);
+  color:var(--line);
+  border:none;
+  border-bottom:2px solid rgba(244,244,237,0.15);
+  padding:12px 18px;
+  font-size:14px;
+  cursor:pointer;
+  text-align:left;
+}
+#backButton:hover{ color:var(--gold); }
+
+#gameFrame{
+  flex:1;
+  width:100%;
+  border:none;
 }
