@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Penalty Math</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="fxCanvas"></canvas>
+
+  <div id="game">
+    <h1>⚽ PENALTY MATH ⚽</h1>
+
+    <!-- ---------- PANTALLA DE SELECCIÓN DE OPERACIÓN ---------- -->
+    <div id="modeSelect">
+      <h2>ELIGE TU TIRO</h2>
+      <div class="op-grid">
+        <button class="op-btn" data-op="suma">➕<br>Sumas</button>
+        <button class="op-btn" data-op="resta">➖<br>Restas</button>
+        <button class="op-btn" data-op="multiplicacion">✖️<br>Multiplicar</button>
+        <button class="op-btn" data-op="division">➗<br>Dividir</button>
+      </div>
+    </div>
+
+    <!-- ---------- PANTALLA DE JUEGO (oculta hasta elegir operación) ---------- -->
+    <div id="playScreen" class="hidden">
+
+      <div id="scoreboard">
+        <div class="sb-item">PUNTOS<span id="score">0</span></div>
+        <div class="sb-item">NIVEL<span id="level">1</span></div>
+        <div class="sb-item">INTENTOS<span id="lives">3</span></div>
+        <div class="sb-item">RACHA<span id="streak">0</span></div>
+        <div class="sb-item cards">
+          <span id="yellowCard" class="card yellow hidden">🟨</span>
+          <span id="redCard" class="card red hidden">🟥</span>
+        </div>
+      </div>
+
+      <div id="timer-container">
+        <div id="timer"></div>
+        <div id="spark">🔥</div>
+      </div>
+
+      <div id="pitch">
+        <div id="goal"></div>
+        <div id="sprite">
+          <img id="playerSprite" src="sprites/penal_idle.svg" alt="Jugador">
+        </div>
+        <div id="ball">⚽</div>
+      </div>
+
+      <h2>RESUELVE:</h2>
+      <div id="problem"></div>
+      <div id="word"></div>
+
+      <input
+        type="text"
+        id="inputWord"
+        autocomplete="off"
+        autocapitalize="off"
+        autocorrect="off"
+        spellcheck="false"
+        inputmode="numeric"
+        placeholder="Escribe el resultado">
+
+      <div id="message">&nbsp;</div>
+
+      <button id="changeOpButton">Cambiar operación 🔁</button>
+    </div>
+
+    <button id="startButton" class="hidden">Comenzar Partido</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
