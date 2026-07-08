@@ -235,13 +235,14 @@ h2{
 #startButton.hidden{ display:none; }
 
 /* ---------- EFECTOS: SHAKE / FLASH ---------- */
-.shake{ animation:pitchShake 0.35s ease; }
+.shake{ animation:pitchShake 2.35s ease; }
+.shake{ animation:pitchShake 2.5s ease; }
 @keyframes pitchShake{
   0%{transform:translate(0,0) rotate(0);}
-  20%{transform:translate(-6px,2px) rotate(-0.6deg);}
-  40%{transform:translate(5px,-2px) rotate(0.5deg);}
-  60%{transform:translate(-4px,1px) rotate(-0.4deg);}
-  80%{transform:translate(3px,-1px) rotate(0.3deg);}
+  20%{transform:translate(-14px,4px) rotate(-1.5deg);}
+  40%{transform:translate(12px,-4px) rotate(1.2deg);}
+  60%{transform:translate(-10px,3px) rotate(-1deg);}
+  80%{transform:translate(6px,-2px) rotate(0.6deg);}
   100%{transform:translate(0,0) rotate(0);}
 }
 .dim-flash{ animation:dimFlash 0.4s ease; }
@@ -257,6 +258,4 @@ h2{
   100%{filter:brightness(1);}
 }
 
-@media (prefers-reduced-motion: reduce){
-  .shake, .dim-flash, .goal-flash, #ball{ animation:none !important; transition:none !important; }
-}
+
